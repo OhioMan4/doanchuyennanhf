@@ -3,4 +3,4 @@
 /infrastructure
 /README.md
 /src
-/.env
+.env*
