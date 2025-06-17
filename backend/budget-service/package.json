@@ -109,6 +109,7 @@
     "has-symbols": "^1.1.0",
     "has-tostringtag": "^1.0.2",
     "hasown": "^2.0.2",
+    "helmet": "^8.1.0",
     "html-escaper": "^2.0.2",
     "http-errors": "^2.0.0",
     "human-signals": "^2.1.0",
