@@ -37,7 +37,9 @@ exports.getBudgetByUserAndMonth = async ({ userId, month }) => {
     if (catId && categoryMap.has(catId)) {
       categoryMap.get(catId).items.push({
         itemId: item._id,
-        itemName: item.name
+        itemName: item.name,
+        amount:item.amount,
+        date:item.date
       });
     }
   });

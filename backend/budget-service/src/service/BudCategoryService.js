@@ -16,15 +16,25 @@ exports.getUserCategory=async({userId,budgetId})=>{
   return dataUserCategory;
 }
 
-exports.createBudgetItemInCategory=async({budgetId,categoryId,name})=>{
+exports.createBudgetItemInCategory=async({budgetId,categoryId,name,amount,date})=>{
   const budgetCategory=await BudgetCategory.findOne({_id:categoryId});
   console.log(budgetCategory)
 
   if (!budgetCategory) throw new Error("Missing BudgetCategory")
 
-  const item =new BudgetItem({budgetId,categoryId,name});
-  return await item.save() 
+  const item =new BudgetItem({budgetId,categoryId,name,amount,date});
+  return await item.save()
 },
+exports.deleteBudgetItemInCategory=async({budgetId,categoryId})=>{
+  const budgetCategory=await BudgetCategory.findOne({_id:categoryId});
+  console.log(budgetCategory)
+
+  if (!budgetCategory) throw new Error("Missing BudgetCategory")
+
+  const item =new BudgetItem.deleteMany({categoryId})
+  return  {message: "Delete Item Successfully"}
+},
+
 exports.deleteCategory=async({budgetId,categoryId})=>{
   console.log({budgetId,categoryId})
   
