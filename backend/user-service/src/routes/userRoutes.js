@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
 const auth = require('../middleware/auth');
+const notificationController=require('../controllers/notificationController')
 
 // Public routes
-router.post('/register', userController.createUser);
-
-// Protected routes
-router.get('/', auth, userController.getAllUsers);
-router.get('/:id', auth, userController.getUserById);
-router.put('/:id', auth, userController.updateUser);
-router.delete('/:id', auth, userController.deleteUser);
-router.patch('/:id/profile', auth, userController.updateProfile);
-
+router.get('/notification',auth,notificationController.getNotification)
+router.post('/notification',auth,notificationController.sendNotification)
 module.exports = router; 
