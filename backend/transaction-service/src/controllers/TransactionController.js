@@ -1,5 +1,6 @@
 const Transaction = require('../models/Transaction');
 const config=require('dotenv')
+const TransactionService=require('../service/transactionService')
 
 const axios=require('axios')
 config.config();
@@ -20,51 +21,37 @@ exports.getBudget=async(req,res)=>{
 
 exports.createTransaction = async (req, res) => {
     try {
-        const userId=req.user.userId;
-        const { type, amount, date, category, description } = req.body;
+        const userId=req.user?.userId;
+        const { type, amount, date, description,itemId } = req.body;
         const transaction = new Transaction({
           userId,
+          itemId,
           type,
           amount,
           date,
-          category,
           description
       });
       await transaction.save();
         res.status(201).json("Transaction Created");
-    } catch (error) {
+    } catch (error) { 
         res.status(500).json({ message: 'Error creating transaction', error: error.message });
     }
 };
 
 exports.getTransactions = async (req, res) => {
-  const { type, category, month, year } = req.query;
-  const userId = req.user?.userId // lấy từ token hoặc query
-  const filter = {};
-
-  if (!userId) {
-    return res.status(400).json({ message: 'Missing userId' });
+  const userId=req.user?.userId;
+  const month=req.params.month;
+  
+  try{
+    const dataTransaction=await TransactionService.getTransactions(userId,month);
+    res.status(201).json(dataTransaction)
+  }
+  catch(error){
+       res.status(500).json({message:"Error",error :error.message});
   }
 
-  filter.userId = userId;
 
-  if (type) filter.type = type;
-  if (category) filter.category = category;
 
-  if (month && year) {
-    const startDate = new Date(`${year}-${month}-01`);
-    const endDate = new Date(`${year}-${month}-31`);
-    filter.date = { $gte: startDate, $lte: endDate };
-  }
-
-  try {
-    const transactions = await Transaction.find(filter)
-      .sort({ date: -1 })
-      .limit(100);
-    res.status(200).json(transactions);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching transactions', error: error.message });
-  }
 };
 
 
@@ -83,9 +70,9 @@ exports.updateTransaction = async (req, res) => {
 };
 
 exports.deleteTransaction = async (req, res) => {
-    const { id } = req.params;
+    const  id  = req.params.id;
     try {
-      const deletedTransaction = await Transaction.findByIdAndDelete(id);
+      const deletedTransaction = await Transaction.deleteOne({_id:id});
       if (!deletedTransaction) {
         return res.status(404).json({ message: 'Transaction not found' });
       }
@@ -101,6 +88,23 @@ exports.getTransactionSummary = async (req, res) => {
   if (year) filter.date = { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) };
   
 };
+exports.deleteAllTransaction=async(req,res)=>{
+  const userId = req.user?.userId;
+  try {
+    const deleted = await TransactionService.deleleAllTransaction(userId);
+
+    if (deleted.deletedCount === 0) {
+      return res.status(404).json({ message: 'No transactions found to delete' });
+    }
+
+    return res.status(200).json({
+      message: 'All transactions deleted successfully',
+      deletedCount: deleted.deletedCount
+    });}
+  catch(err){
+    res.status(500).json({ message: 'Error deleting transaction', error: err.message });
+  }
+}
 
 
 
