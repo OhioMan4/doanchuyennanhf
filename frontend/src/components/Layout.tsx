@@ -21,6 +21,7 @@ import {
   Divider,
   Badge,
   InputBase,
+  Card, CardContent
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -38,12 +39,34 @@ import {
 import authService from '../services/auth.service';
 import { Nofi } from '../models/notifi';
 import NotificationServive from '../services/nofitication.service';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const drawerWidth = 280;
 
 interface LayoutProps {
   children: React.ReactNode;
 }
+
+interface NotificationCardProps {
+  title: string;
+  message: string;
+}
+
+const NotificationCard: React.FC<NotificationCardProps> = ({ title, message }) => {
+  return (
+    <Card elevation={3} sx={{ maxWidth: 600, m: 2, borderRadius: 2 }}>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          {title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {message}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
 
 const menuItems = [
   { text: 'Tổng quan', icon: <DashboardIcon />, path: '/' },
@@ -56,15 +79,18 @@ const menuItems = [
 export default function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] = useState<null|HTMLElement>(null)
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null)
   const [languageAnchorEl, setLanguageAnchorEl] = useState<null | HTMLElement>(null);
-  
+
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const user = authService.getCurrentUser();
-  const open=Boolean(anchorEl)
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const open = Boolean(anchorEl)
+  const [notifications, setNotifications] = useState<NotificationCardProps[]>([]);
+  const shouldRefetch = useSelector((state: RootState) => state.refetch.shouldRefetch);
+
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -73,33 +99,54 @@ export default function Layout({ children }: LayoutProps) {
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleProfileMenuClose=()=>{
+  const handleProfileMenuClose = () => {
     setAnchorEl(null)
-  } 
+  }
 
-  useEffect(()=>{
-  if(!open) return ;
+  // useEffect(()=>{
+  // if(!open) return ;
 
-  const fetchData=async()=>{
-        try{
-          const res=await NotificationServive.getNotification();
-          const data:Nofi[]=res;
-          const messages:string[]=data.map((item)=>item.message);
-          setNotifications(messages)
-        }
-        catch(err)
-        {
-          console.log(err)
-        }
-      }
-    fetchData();
-    console.log(notifications)
-  },[open])
+  // const fetchData=async()=>{
+  //       try{
+  //         const res=await NotificationServive.getNotification();
+  //         const data:Nofi[]=res;
+  //         const messages:string[]=data.map((item)=>item.message);
+  //         setNotifications(messages)
+  //       }
+  //       catch(err)
+  //       {
+  //         console.log(err)
+  //       }
+  //     }
+  //   fetchData();
+  //   console.log(shouldRefetch)
+  // },[shouldRefetch])
 
-  const handleOpen=(event:React.MouseEvent<HTMLElement>)=>{
+
+  const fetchData = async () => {
+    try {
+      const res = await NotificationServive.getNotification();
+      const data: Nofi[] = res;
+      const messages: { title: string; message: string }[] = data.map((item) => ({
+        title: item.title,
+        message: item.message,
+      }));
+      setNotifications(messages)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+  useEffect(() => {
+    console.log(shouldRefetch)
+    fetchData()
+  }, [shouldRefetch])
+
+
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setNotificationAnchorEl(event.currentTarget);
   };
-  const handleClose=()=>{
+  const handleClose = () => {
     setNotificationAnchorEl(null);
   };
   const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -211,7 +258,7 @@ export default function Layout({ children }: LayoutProps) {
           >
             <MenuIcon />
           </IconButton>
-          
+
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Language Selector */}
@@ -232,26 +279,29 @@ export default function Layout({ children }: LayoutProps) {
           </Menu>
 
           {/* Notifications */}
-                  <IconButton color="default" onClick={handleOpen}>
-                <Badge badgeContent={notifications.length} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <Menu
-        anchorEl={notificationAnchorEl}
-        open={Boolean(notificationAnchorEl)}
-        onClose={handleClose}>
-        {notifications.map((note, index) => (
-          <MenuItem key={index} onClick={handleClose}>
-            <Typography variant="body2">{note}</Typography>
-          </MenuItem>
-        ))}
-        {notifications.length === 0 && (
-          <MenuItem disabled>
-            <Typography variant="body2" color="text.secondary">Không có thông báo</Typography>
-          </MenuItem>
-        )}
-      </Menu>
+          <IconButton color="default" onClick={handleOpen}>
+            <Badge badgeContent={notifications.length} color="error">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          <Menu
+            anchorEl={notificationAnchorEl}
+            open={Boolean(notificationAnchorEl)}
+            onClose={handleClose}>
+            {notifications.map((note, index) => (
+              <MenuItem key={index} onClick={handleClose}>
+                <NotificationCard
+                 title={note.title}
+                 message={note.message}
+/>
+              </MenuItem>
+            ))}
+            {notifications.length === 0 && (
+              <MenuItem disabled>
+                <Typography variant="body2" color="text.secondary">Không có thông báo</Typography>
+              </MenuItem>
+            )}
+          </Menu>
 
           {/* Profile */}
           <Box

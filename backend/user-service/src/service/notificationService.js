@@ -15,3 +15,11 @@ exports.sendNotification=async(title,message,userId)=>{
         throw error
     }
 }
+exports.deleteAllMessage=async(userId)=>{
+    try{
+        return NotifiModel.deleteMany({userId})
+    }
+    catch(error){
+        throw error
+    }
+}

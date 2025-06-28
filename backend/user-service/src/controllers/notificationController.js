@@ -20,4 +20,14 @@ exports.sendNotification=async(req,res)=>{
         res.status(500).json({ message: 'Error sendNotification', error: error.message });
     }
 }
+exports.deleteAllNotification=async(req,res)=>{
+    try{
+       const userId=req.user.userId;
+       const deleteted=await notificationService.deleteAllMessage(userId);
+       res.status(200).json({message:"delete successfully"});
+    }
+    catch(error){
+        res.status(500).json({ message: 'Error Delete Notification', error: error.message });
+    }
+}
 

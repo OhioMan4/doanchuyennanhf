@@ -12,7 +12,9 @@ import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import authService from './services/auth.service';
-
+import { AppProvider } from './context/nofiticationContext';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 // Tạo theme
 const theme = createTheme({
@@ -105,16 +107,19 @@ function App() {
             
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route
+           
+           <Route
               path="/"
               element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Dashboard />
-                  </Layout>
-                </ProtectedRoute>
+                  
+                    <ProtectedRoute>
+                <Layout>
+                  <Dashboard />
+                </Layout>
+              </ProtectedRoute> 
               }
             />
+
             <Route
               path="/transactions"
               element={
@@ -125,16 +130,20 @@ function App() {
                 </ProtectedRoute>
               }
             />
+      
             <Route
               path="/budget"
               element={
-                <ProtectedRoute>
+                   <Provider store={store}>
+                       <ProtectedRoute>
                   <Layout>
-                    <Budget />
+                    <Budget/>
                   </Layout>
                 </ProtectedRoute>
+                   </Provider>
               }
             />
+          
             <Route
               path="/reports"
               element={
