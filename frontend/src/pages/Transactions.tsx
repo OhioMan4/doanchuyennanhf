@@ -20,12 +20,14 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 import TransactionService from '../services/transaction.service';
 import { Transaction } from '../models/transactions';
 import { unix } from 'dayjs';
+import BudgetService from '../services/budget.service';
 
 interface Transactionn {
   _id?:string;
@@ -48,6 +50,7 @@ const TransactionForm: React.FC = () => {
   const [transactionData,setTransactionData]=useState<Transaction[]>([])
   const [deleteOpenConfirm,setDeleteOpenConfirm]=useState(false)
   const [confirmIndex,setConfirmIndex]=useState(-1);
+  const [saveOpenConfirm,setSaveOpenConfirm]=useState(false);
 
   useEffect(()=>{
     fetchAllTransaction();
@@ -103,6 +106,22 @@ const TransactionForm: React.FC = () => {
     }
     delteTransaction();
     setConfirmIndex(-1);
+  }
+  const handleSave=(index:number)=>{
+    setConfirmIndex(index);
+    setSaveOpenConfirm(true);
+  }
+  const handleSaveTransactionToItemCategory=()=>{
+    //  setSaveOpenConfirm(false);
+    //  const saveOpenConfirmTransaction=async()=>{
+    //   try{
+    //     if (!transactions[confirmIndex]._id || confirmIndex==-1) return alert("missing ID of transaction")
+    //     const saved =await BudgetService.createItem()
+    //   }
+    //   catch(err){
+
+    //   }
+    //  }
   }
 
   const filteredTransactions =
@@ -212,6 +231,9 @@ const TransactionForm: React.FC = () => {
                   {tx.type === 'expense' ? '-' : '+'}{tx.amount} VND
                 </TableCell>
                 <TableCell align="center">
+                <IconButton onClick={() => handleDelete(index)} color="primary">
+                    <SaveIcon />
+                  </IconButton>
                   <IconButton onClick={() => handleDelete(index)} color="error">
                     <DeleteIcon />
                   </IconButton>
