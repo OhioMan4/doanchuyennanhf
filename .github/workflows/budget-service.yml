@@ -3,7 +3,7 @@ name: CI - Budget Service
 on:
   push:
     paths:
-      - '/backend/budget-service/**'
+      - 'backend/budget-service/**'
 
 jobs:
   build-and-push:
