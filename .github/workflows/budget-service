@@ -21,7 +21,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t chywiz/budget-service:latest ../budget-service
+          docker build -t chywiz/budget-service:latest ./backend/budget-service
 
       - name: Push image
         run: |
