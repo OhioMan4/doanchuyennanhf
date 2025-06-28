@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run dev
+CMD ["npm", "run", "dev", "--", "--host"]
 
 # Stage 2: Serve build with Nginx
 FROM nginx:stable-alpine
