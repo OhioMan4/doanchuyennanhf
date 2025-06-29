@@ -38,4 +38,46 @@ Hệ thống được xây dựng theo kiến trúc **microservices**, giúp d�
 ---
 
 ## 🗂️ Cấu trúc thư mục
+├── frontend/ # Ứng dụng giao diện React
+├── backend/
+│ ├── auth-service/ # Dịch vụ xác thực người dùng
+│ ├── budget-service/ # Dịch vụ quản lý ngân sách
+│ └── transactions-service/ # Dịch vụ quản lý giao dịch
+└── docs/ # Tài liệu mô tả dự án
 
+## 📦 Yêu cầu hệ thống
+
+- Node.js >= 16.x  
+- Docker >= 20.x  
+- MongoDB >= 6  
+- K3s >= 1.24  
+- ArgoCD >= 2.0  
+- GitHub Actions
+
+---
+
+## 🚀 Hướng dẫn cài đặt và chạy
+
+### 🔸 Bước 1: Clone dự án
+
+git clone https://github.com/<your-org>/<your-repo>.git
+
+
+cd frontend
+npm install
+npm run dev
+
+d backend
+
+# Chạy auth-service
+cd auth-service
+npm install
+npm run dev
+
+cd ../budget-service
+npm install
+npm run dev
+
+cd ../transactions-service
+npm install
+npm run dev
