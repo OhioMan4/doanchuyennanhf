@@ -1,5 +1,6 @@
 FROM node:20-alpine
 
+ADD . /app
 WORKDIR /app
 
 COPY package*.json ./
