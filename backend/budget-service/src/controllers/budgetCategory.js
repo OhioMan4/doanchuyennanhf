@@ -30,13 +30,12 @@ exports.getBudgetCategory=async(req,res)=>{
 };
 exports.createBudgetItemInCategory=async(req,res)=>{
   const categoryId=req.params.categoryId
-  const {name,budgetId}=req.body
+  const {name,budgetId,date,amount}=req.body
   console.log(budgetId)
-  const createBudgetItem=await BudCategoryService.createBudgetItemInCategory({budgetId,categoryId,name})
+  const createBudgetItem=await BudCategoryService.createBudgetItemInCategory({budgetId,categoryId,name,amount,date})
   if(!createBudgetItem){
-    res.status(404).json({error:"Error in createBudgetItem"})
-  }
-  res.status(201).json(createBudgetItem)  
+    res.status(404).json({error:"Error in createBudgetItem"})  }
+    res.status(201).json(createBudgetItem)  
 }
 
 exports.deleteCategoryOfBudget=async(req,res)=>{

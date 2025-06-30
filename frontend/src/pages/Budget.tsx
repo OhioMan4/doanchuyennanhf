@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -26,7 +26,9 @@ import BudgetService from '../services/budget.service';
 import { Budget, BudgetData, CategoryData } from '../models/budget';
 import notificationService from '../services/nofitication.service'
 import { Category } from '../models/budget';
-import { Title } from '@mui/icons-material';
+import { Numbers, Title } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { triggerRefetch } from '../redux/refresh';
 const CircularProgressWithLabel = ({
   value,
   date,
@@ -83,14 +85,14 @@ const BudgetCard = styled(Card)(({ theme }) => ({
 }));
 
 interface Item {
-  name: string;
-  amount: number;
+  name: String;
+  amount: Number;
   date: string;
 }
 
 
 const BudgetServicePage = () => {
-  const [spent, setSpent] = useState(24500);
+  const [spent, setSpent] = useState(0);
   const [monthlyLimit,setMonthlyLimit] = useState(0);
   const [date,setDate]=useState('')
   const remaining = monthlyLimit - spent;
@@ -104,12 +106,16 @@ const BudgetServicePage = () => {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState<number | null>(null);
   const [newItem, setNewItem] = useState<Item>({ name: '', amount: 0, date: '' });
   const [budget,setBudget]=useState('');
-  const [message,setMessage]=useState('')
+  const [message,setMessage]=useState('');
+  const dispatch=useDispatch()
+ 
+ 
+
 
 
   useEffect(()=>{
        fetchData()
-    },[open]);
+    },[open,newItem]);
     
     const fetchData=async()=>{
       const data:BudgetData=await BudgetService.getUserBudget();
@@ -132,12 +138,15 @@ const BudgetServicePage = () => {
           setNewCategory(String(data.name));
           setErrorMessage(null);  
           setOpen(false);  
-          notificationService.createNotification({message:"đã tạo thành công ",title:`${data.name}`})        
+          notificationService.createNotification({message:"đã tạo thành công ",title:`Category ${data.name}`}) 
+          dispatch(triggerRefetch()) 
         })
         .catch((error) => {
           console.error(error);
           setErrorMessage("Failed to create category.");
         });
+
+       
     };
     
 
@@ -148,7 +157,7 @@ const BudgetServicePage = () => {
         alert(data)
        });
       setCategories((prev) => prev.filter((_, i) => i !== confirmDeleteIndex));
-      notificationService.createNotification({message:"đã xóa thành công ",title:`Category ${name}`})    
+      notificationService.createNotification({message:"đã xóa thành công ",title:`Deleted ${name.toUpperCase}`})   
       setConfirmDeleteIndex(null);
     }
   };
@@ -157,8 +166,13 @@ const BudgetServicePage = () => {
     if (activeCategoryIndex !== null && newItem.name.trim()) {
       const updated = [...categories];
       setCategories(updated);
-
-      setNewItem({ name: '', amount: 0, date: '' });
+      const name =newItem.name;
+      const amount=newItem.amount;
+      const date=newItem.date;
+      const data=BudgetService.createItem({budgetId:budget,categoryId:categories[activeCategoryIndex].id,name,amount,date}).then((data)=>{
+        alert('Thêm item thành công !!!!')
+      })
+      setNewItem({name:'',amount:0,date:''})
       notificationService.createNotification({message:`Đã thêm thành công `,title:`Item ${newItem.name}`})    
       setItemDialogOpen(false);
     }
@@ -234,8 +248,8 @@ const BudgetServicePage = () => {
                         <Grid item xs={12} sm={6} md={4} key={itemIndex}>
                           <Card variant="outlined" sx={{ p: 2 }}>
                             <Typography fontWeight="bold">{item.itemName}</Typography>
-                            <Typography color="text.secondary">${item.itemName}</Typography>
-                            <Typography variant="caption" color="text.secondary">{item.itemName}</Typography>
+                            <Typography color="text.secondary">{item.amount} dong</Typography>
+                            <Typography variant="caption" color="text.secondary">{item.date?.toString()}</Typography>
                           </Card>
                         </Grid>
                       ))}

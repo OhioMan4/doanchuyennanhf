@@ -11,7 +11,9 @@ export interface Category{
 }
 export interface CategoryItem{
   itemId:String,
-  itemName:String
+  itemName:String,
+  amount: number,
+  date: Date
 
 }
 export interface CategoryData{
