@@ -7,4 +7,4 @@ spec:
     app: auth-service
   ports:
     - port: 80
-      targetPort: 3001
+      targetPort: 3000
