@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # 1. Secret Scan toàn repo
+      - name: Gitleaks
+        uses: zricethezav/gitleaks-action@v2
+
+      # 2. Build & Push frontend
+      - name: Build & push frontend
+        run: |
+          docker build -t myregistry.local/frontend:latest ./frontend
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login myregistry.local -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker push myregistry.local/frontend:latest
+
+      # 3. Build & Push auth-service
+      - name: Build & push auth-service
+        run: |
+          docker build -t chywiz/auth-service:latest ./backend/auth-service
+          docker push chywiz/auth-service:latest
+
+      # 4. Build & Push budget-service
+      - name: Build & push budget-service
+        run: |
+          docker build -t chywiz/budget-service:latest ./backend/budget-service
+          docker push chywiz/budget-service:latest
+
+      # 5. Scan images bằng Trivy (VD: auth-service)
+      - name: Scan with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: chywiz/auth-service:latest
