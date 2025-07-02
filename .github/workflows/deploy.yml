@@ -32,7 +32,12 @@ jobs:
         run: |
           docker build -t chywiz/budget-service:latest ./backend/budget-service
           docker push chywiz/budget-service:latest
-
+          
+      - name: Build & push transaction-service
+        run: |
+          docker build -t chywiz/transaction-service:latest ./backend/transaction-service
+          docker push chywiz/transaction-service:latest
+    
       # 5. Scan images bằng Trivy (VD: auth-service)
       - name: Scan with Trivy
         uses: aquasecurity/trivy-action@master
