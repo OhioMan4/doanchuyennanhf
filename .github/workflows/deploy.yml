@@ -18,7 +18,7 @@ jobs:
       - name: Build & push frontend
         run: |
           docker build -t chywiz/frontend:latest ./frontend
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker push myregistry.local/frontend:latest
 
       # 3. Build & Push auth-service
