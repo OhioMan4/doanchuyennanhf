@@ -17,17 +17,4 @@ spec:
           image: chywiz/auth-service:latest # Hoặc tag SHA GitHub
           ports:
             - containerPort: 3000
-          envFrom:
-            - secretRef:
-                name: auth-secret
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: auth-service
-spec:
-  selector:
-    app: auth-service
-  ports:
-    - port: 80
-      targetPort: 3000
+

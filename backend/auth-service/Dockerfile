@@ -7,6 +7,8 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+RUN chmod +x ./node_modules/.bin/nodemon
+
 
 # Copy all source code
 COPY . .
