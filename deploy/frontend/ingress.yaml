@@ -8,7 +8,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.middlewares: default-frontend-rewrite@kubernetescrd
 spec:
   rules:
-    - host: frontend
+    - host: frontend.local
       http:
         paths:
           - path: /
