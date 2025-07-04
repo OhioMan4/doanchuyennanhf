@@ -11,6 +11,10 @@ export default defineConfig({
     host: '0.0.0.0',    
     strictPort: true,     
     cors: true,
-    allowedHosts: true
+    allowedHosts: true,
+    hmr: {
+      protocol: 'ws',
+      host: 'frontend.local',
+    },
   },
 }) 
