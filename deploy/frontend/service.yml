@@ -8,4 +8,4 @@ spec:
     app: frontend
   ports:
     - port: 80
-      targetPort: 3001
+      targetPort: 3000
