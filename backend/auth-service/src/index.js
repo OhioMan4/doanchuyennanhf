@@ -16,7 +16,9 @@ connectDB();
 
 // Middleware
 app.use(helmet()); // Security headers
-app.use(cors()); // Enable CORS
+app.use(cors({
+  origin: '*'
+})); // Enable CORS
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
