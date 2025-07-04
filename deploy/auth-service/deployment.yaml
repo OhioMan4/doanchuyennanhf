@@ -15,6 +15,4 @@ spec:
       containers:
         - name: auth-service
           image: chywiz/auth-service:latest # Hoặc tag SHA GitHub
-          ports:
-            - containerPort: 3000
 
