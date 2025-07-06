@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.VITE_API_URL;
+const API_URL = 'http://auth.local/api/auth';
 
 const authService = {
   async register(userData: any) {
