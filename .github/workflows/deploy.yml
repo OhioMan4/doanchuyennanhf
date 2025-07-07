@@ -37,13 +37,13 @@ jobs:
       # 5. Build & Push budget-service
       - name: Build & push budget-service
         run: |
-          docker build -t chywiz/budget-service:$latest ./backend/budget-service
+          docker build -t chywiz/budget-service:latest ./backend/budget-service
           docker push chywiz/budget-service:latest
           
       # 6. Build & Push transaction-service
       - name: Build & push transaction-service
         run: |
-          docker build -t chywiz/transaction-service:$latest ./backend/transaction-service
+          docker build -t chywiz/transaction-service:latest ./backend/transaction-service
           docker push chywiz/transaction-service:latest
 
       # 7. Scan image bằng Trivy (VD: auth-service)
