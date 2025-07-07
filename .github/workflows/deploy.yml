@@ -35,6 +35,8 @@ jobs:
 
       - name: Commit & push updated image tag
         run: |
+          git config --global user.email "22520178@gm.uit.edu.vn"
+          git config --global user.name "OhioMan04"
           git add deploy/frontend/deployment.yaml
           git commit -m "Update frontend image to ${IMAGE_TAG}"
           git push origin main
