@@ -34,12 +34,15 @@ jobs:
           sed -i "s|chywiz/frontend:.*|chywiz/frontend:${IMAGE_TAG}|g" deploy/frontend/deployment.yaml
 
       - name: Commit & push updated image tag
+        env:
+          PAT: ${{ secrets.GH_PAT }}
         run: |
-          git config --global user.email "22520178@gm.uit.edu.vn"
-          git config --global user.name "OhioMan04"
-          git add deploy/frontend/deployment.yaml
-          git commit -m "Update frontend image to ${IMAGE_TAG}"
-          git push origin main
+          git config user.name "CI Bot"
+          git config user.email "ci@chywiz.com"
+          git add deploy/frontend/deploy.yaml
+          git commit -m "Update frontend image to ${IMAGE_TAG}" || echo "No changes"
+          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:main
+
 
       # 4. Build & Push auth-service
       - name: Build & push auth-service
