@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: chywiz/frontend:latest
+          image: chywiz/frontend:sha-xxxx
