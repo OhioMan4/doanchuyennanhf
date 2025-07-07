@@ -28,6 +28,16 @@ jobs:
         run: |
           docker build -t chywiz/frontend:${IMAGE_TAG} ./frontend
           docker push chywiz/frontend:${IMAGE_TAG}
+       # 3.5. Update image tag trong deploy/frontend/deploy.yaml
+      - name: Update image tag in frontend deployment YAML
+        run: |
+          sed -i "s|chywiz/frontend:.*|chywiz/frontend:${IMAGE_TAG}|g" deploy/frontend/deploy.yaml
+
+      - name: Commit & push updated image tag
+        run: |
+          git add deploy/frontend/deployment.yaml
+          git commit -m "Update frontend image to ${IMAGE_TAG}"
+          git push origin main
 
       # 4. Build & Push auth-service
       - name: Build & push auth-service
@@ -52,3 +62,4 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: chywiz/auth-service:${{ env.IMAGE_TAG }}
+     
