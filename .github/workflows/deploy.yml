@@ -8,8 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      IMAGE_TAG: sha-${{ github.sha }}
+    # env:
+    #   IMAGE_TAG: sha-${{ github.sha }}
 
     steps:
       - uses: actions/checkout@v3
@@ -26,29 +26,29 @@ jobs:
       # 3. Build & Push frontend
       - name: Build & push frontend
         run: |
-          docker build -t chywiz/frontend:${IMAGE_TAG} ./frontend
-          docker push chywiz/frontend:${IMAGE_TAG}
+          docker build -t chywiz/frontend:latest ./frontend
+          docker push chywiz/frontend:latest
       # 4. Build & Push auth-service
       - name: Build & push auth-service
         run: |
-          docker build -t chywiz/auth-service:${IMAGE_TAG} ./backend/auth-service
-          docker push chywiz/auth-service:${IMAGE_TAG}
+          docker build -t chywiz/auth-service:latest ./backend/auth-service
+          docker push chywiz/auth-service:latest
 
       # 5. Build & Push budget-service
       - name: Build & push budget-service
         run: |
-          docker build -t chywiz/budget-service:${IMAGE_TAG} ./backend/budget-service
-          docker push chywiz/budget-service:${IMAGE_TAG}
+          docker build -t chywiz/budget-service:$latest ./backend/budget-service
+          docker push chywiz/budget-service:latest
           
       # 6. Build & Push transaction-service
       - name: Build & push transaction-service
         run: |
-          docker build -t chywiz/transaction-service:${IMAGE_TAG} ./backend/transaction-service
-          docker push chywiz/transaction-service:${IMAGE_TAG}
+          docker build -t chywiz/transaction-service:$latest ./backend/transaction-service
+          docker push chywiz/transaction-service:latest
 
       # 7. Scan image bằng Trivy (VD: auth-service)
       - name: Scan with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: chywiz/auth-service:${{ env.IMAGE_TAG }}
+          image-ref: chywiz/auth-service:latest
      
