@@ -15,4 +15,5 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: chywiz/frontend:sha-xxxx
+          image: chywiz/frontend:latest
+          imagePullPolicy: Always  
