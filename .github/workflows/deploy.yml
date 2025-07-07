@@ -37,8 +37,8 @@ jobs:
         env:
           PAT: ${{ secrets.GH_PAT }}
         run: |
-          git config user.name "CI Bot"
-          git config user.email "ci@chywiz.com"
+          git config user.name "OhioMan04"
+          git config user.email "22520178@gm.uit.edu.vn"
           git add deploy/frontend/deployment.yaml
           git commit -m "Update frontend image to ${IMAGE_TAG}" || echo "No changes"
           git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:main
