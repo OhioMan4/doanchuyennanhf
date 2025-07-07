@@ -1,4 +1,4 @@
-import axios, { AxiosHeaders } from 'axios'
+import axios from 'axios'
 import {Nofi} from "../models/notifi"
 
 const API_URL='http://localhost:3004/user/'

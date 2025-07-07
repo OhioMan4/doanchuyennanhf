@@ -17,7 +17,6 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  Button,
   Divider,
   Badge,
   InputBase,
@@ -85,8 +84,6 @@ export default function Layout({ children }: LayoutProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const user = authService.getCurrentUser();
-  const open = Boolean(anchorEl)
   const [notifications, setNotifications] = useState<NotificationCardProps[]>([]);
   const shouldRefetch = useSelector((state: RootState) => state.refetch.shouldRefetch);
 

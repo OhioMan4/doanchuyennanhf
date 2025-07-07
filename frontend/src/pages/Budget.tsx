@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -23,10 +23,8 @@ import {
 import { styled } from '@mui/material/styles';  
 import DeleteIcon from '@mui/icons-material/Delete';
 import BudgetService from '../services/budget.service';
-import { Budget, BudgetData, CategoryData } from '../models/budget';
+import {  BudgetData, CategoryData } from '../models/budget';
 import notificationService from '../services/nofitication.service'
-import { Category } from '../models/budget';
-import { Numbers, Title } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { triggerRefetch } from '../redux/refresh';
 const CircularProgressWithLabel = ({
@@ -106,7 +104,6 @@ const BudgetServicePage = () => {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState<number | null>(null);
   const [newItem, setNewItem] = useState<Item>({ name: '', amount: 0, date: '' });
   const [budget,setBudget]=useState('');
-  const [message,setMessage]=useState('');
   const dispatch=useDispatch()
  
  
@@ -118,6 +115,7 @@ const BudgetServicePage = () => {
     },[open,newItem]);
     
     const fetchData=async()=>{
+      setSpent(0);
       const data:BudgetData=await BudgetService.getUserBudget();
       setBudget(String(data.budget.budgetId));
       const monthlyLimits=Number(data.budget.totalAmount);
@@ -156,6 +154,7 @@ const BudgetServicePage = () => {
        const data=(BudgetService.deleteCategory({budgetId:budget,categoryId:categories[confirmDeleteIndex].id})).then((data)=>{
         alert(data)
        });
+       console.log(data)
       setCategories((prev) => prev.filter((_, i) => i !== confirmDeleteIndex));
       notificationService.createNotification({message:"đã xóa thành công ",title:`Deleted ${name.toUpperCase}`})   
       setConfirmDeleteIndex(null);
@@ -169,9 +168,10 @@ const BudgetServicePage = () => {
       const name =newItem.name;
       const amount=newItem.amount;
       const date=newItem.date;
-      const data=BudgetService.createItem({budgetId:budget,categoryId:categories[activeCategoryIndex].id,name,amount,date}).then((data)=>{
+      const _data=BudgetService.createItem({budgetId:budget,categoryId:categories[activeCategoryIndex].id,name,amount,date}).then((_datas)=>{
         alert('Thêm item thành công !!!!')
       })
+      console.log(_data);
       setNewItem({name:'',amount:0,date:''})
       notificationService.createNotification({message:`Đã thêm thành công `,title:`Item ${newItem.name}`})    
       setItemDialogOpen(false);

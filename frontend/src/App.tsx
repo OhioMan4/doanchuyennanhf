@@ -12,7 +12,6 @@ import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import authService from './services/auth.service';
-import { AppProvider } from './context/nofiticationContext';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 

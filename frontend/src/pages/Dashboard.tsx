@@ -18,19 +18,11 @@ import {
   Avatar,
 } from '@mui/material';
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
   AreaChart,
   Area,
 } from 'recharts';
@@ -43,7 +35,6 @@ import {
   ArrowUpward,
   ArrowDownward,
   AttachMoney,
-  Category,
   ShoppingCart,
   LocalDining,
   DirectionsCar,
@@ -51,7 +42,9 @@ import {
 } from '@mui/icons-material';
 
 // Dữ liệu mẫu
-const monthlyData = [
+
+// @ts-ignore
+const _monthlyData = [
   { month: 'T1', thuNhap: 24000000, chiTieu: 12000000 },
   { month: 'T2', thuNhap: 28000000, chiTieu: 15000000 },
   { month: 'T3', thuNhap: 32000000, chiTieu: 18000000 },

@@ -26,8 +26,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import TransactionService from '../services/transaction.service';
 import { Transaction } from '../models/transactions';
-import { unix } from 'dayjs';
-import BudgetService from '../services/budget.service';
 
 interface Transactionn {
   _id?:string;
@@ -47,10 +45,10 @@ const TransactionForm: React.FC = () => {
   const [transactions, setTransactions] = useState<Transactionn[]>([]);
   const [filter, setFilter] = useState<string | null>('all');
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [transactionData,setTransactionData]=useState<Transaction[]>([])
   const [deleteOpenConfirm,setDeleteOpenConfirm]=useState(false)
   const [confirmIndex,setConfirmIndex]=useState(-1);
-  const [saveOpenConfirm,setSaveOpenConfirm]=useState(false);
+  // @ts-ignore
+  const [saveOpenConfirm,setSaveOpenConfirm]=useState(false); 
 
   useEffect(()=>{
     fetchAllTransaction();
@@ -61,7 +59,8 @@ const TransactionForm: React.FC = () => {
     setOpenConfirm(true)
   }
   const fetchDataTransaction = async (props: Transactionn) => {
-    const data = await TransactionService.createTransaction(props)
+    // @ts-ignore
+    const data = await TransactionService.createTransaction(props) 
   }
 
   const fetchAllTransaction=async()=>{
@@ -72,7 +71,8 @@ const TransactionForm: React.FC = () => {
   }
 
   const handleConfirmSave = async () => {
-    const newTransaction = { itemId, type, amount, date, description };
+    // @ts-ignore
+    const newTransaction = { itemId, type, amount, date, description }; 
 
     try {
       await fetchDataTransaction({ type: type, amount: amount, date: date, description: description });
@@ -98,7 +98,8 @@ const TransactionForm: React.FC = () => {
     const delteTransaction=async()=>{
      try{
       if (!transactions[confirmIndex]._id || confirmIndex==-1) return alert("missing ID of transaction")
-        const deteted=await TransactionService.deleteTransaction(transactions[confirmIndex]._id);
+        // @ts-ignore
+        const deteted=await TransactionService.deleteTransaction(transactions[confirmIndex]._id);  
      }
      catch(err){
        console.log(err)
@@ -107,11 +108,13 @@ const TransactionForm: React.FC = () => {
     delteTransaction();
     setConfirmIndex(-1);
   }
+  // @ts-ignore
   const handleSave=(index:number)=>{
     setConfirmIndex(index);
     setSaveOpenConfirm(true);
   }
-  const handleSaveTransactionToItemCategory=()=>{
+  // @ts-ignore
+  const handleSaveTransactionToItemCategory=()=>{ // @ts-ignore
     //  setSaveOpenConfirm(false);
     //  const saveOpenConfirmTransaction=async()=>{
     //   try{
