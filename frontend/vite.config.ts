@@ -9,6 +9,7 @@ export default defineConfig(({mode})=>{
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
+  base:'/',
   plugins: [react(),tailwindcss(),],
   define: {
     __APP_ENV__: env.APP_ENV,
