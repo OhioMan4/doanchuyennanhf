@@ -46,9 +46,13 @@ jobs:
           docker build -t chywiz/transaction-service:latest ./backend/transaction-service
           docker push chywiz/transaction-service:latest
 
-      # 7. Scan image bằng Trivy (VD: auth-service)
+      # 7. Scan image bằng Trivy 
       - name: Scan with Trivy
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: chywiz/auth-service:latest
+          image-ref: chywiz/budget-service:latest
+          image-ref: chywiz/transaction-service:latest
+          image-ref: chywiz/frontend:latest
+          
      
