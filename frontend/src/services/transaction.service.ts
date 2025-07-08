@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Transaction } from "../models/transactions";
-const API_URL='http://localhost:3001/transactions';
+const API_URL=import.meta.env.VITE_API_URL_TRANSACTION;
 
 const token =localStorage.getItem('token')
 

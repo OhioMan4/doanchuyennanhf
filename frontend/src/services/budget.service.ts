@@ -1,9 +1,10 @@
 import axios from "axios";
 import { Budget, BudgetData, Category, CategoryItem, deleteCategory } from "../models/budget";
 import { adapterGetBudgetResponse } from "../adapter/adapter";
-const API_URL = 'http://localhost:3002/api/budget/2025-04'
-const API_URL_CATE = 'http://localhost:3002/api/budgetCategory'
+const API_URL = import.meta.env.VITE_API_URL_BUDGET
+const API_URL_CATE = import.meta.env.VITE_API_URL_CATE
 const token = localStorage.getItem('token')
+
 
 const BudgetService = {
   async getUserBudget(): Promise<BudgetData> {
