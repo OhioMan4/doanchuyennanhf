@@ -17,6 +17,9 @@ connectDB();
 
 app.use('/api/budget',budgetRoute)
 app.use('/api/budgetCategory',BudgetCategory)
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', service: 'budget-service' });
+  });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

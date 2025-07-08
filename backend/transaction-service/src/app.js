@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/transactions', transactionRoutes);
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', service: 'transaction-service' });
+  });
 
 
 connectDB();
