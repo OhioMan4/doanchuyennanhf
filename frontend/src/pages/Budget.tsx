@@ -290,7 +290,7 @@ const BudgetServicePage = () => {
       <Dialog open={confirmDeleteIndex !== null} onClose={() => setConfirmDeleteIndex(null)}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to Delete this category ?</Typography>
+          <Typography>Are you sure you want to Delete this category  ?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmDeleteIndex(null)}>Cancel</Button>
