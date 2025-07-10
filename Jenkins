@@ -2,11 +2,18 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerhub-creds' // ID của Jenkins Credential
-        IMAGE_TAG = "latest" // Hoặc có thể dùng `sha-${env.GIT_COMMIT}`
+        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
+        IMAGE_TAG = "latest"
     }
 
     stages {
+
+        stage('Checkout Source') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Secret Scan - Gitleaks') {
             steps {
                 sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks detect --source=/path --verbose'
@@ -90,4 +97,3 @@ pipeline {
         }
     }
 }
-
