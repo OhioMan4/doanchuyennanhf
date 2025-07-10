@@ -1,1 +1,99 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDENTIALS_ID = 'dockerhub-creds' // ID của Jenkins Credential
+        IMAGE_TAG = "latest" // Hoặc có thể dùng `sha-${env.GIT_COMMIT}`
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Secret Scan - Gitleaks') {
+            steps {
+                sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks detect --source=/path --verbose'
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                }
+            }
+        }
+
+        stage('Build & Push Images') {
+            parallel {
+                stage('Frontend') {
+                    steps {
+                        sh '''
+                          docker build -t chywiz/frontend:${IMAGE_TAG} ./frontend
+                          docker push chywiz/frontend:${IMAGE_TAG}
+                        '''
+                    }
+                }
+
+                stage('Auth Service') {
+                    steps {
+                        sh '''
+                          docker build -t chywiz/auth-service:${IMAGE_TAG} ./backend/auth-service
+                          docker push chywiz/auth-service:${IMAGE_TAG}
+                        '''
+                    }
+                }
+
+                stage('Budget Service') {
+                    steps {
+                        sh '''
+                          docker build -t chywiz/budget-service:${IMAGE_TAG} ./backend/budget-service
+                          docker push chywiz/budget-service:${IMAGE_TAG}
+                        '''
+                    }
+                }
+
+                stage('Transaction Service') {
+                    steps {
+                        sh '''
+                          docker build -t chywiz/transaction-service:${IMAGE_TAG} ./backend/transaction-service
+                          docker push chywiz/transaction-service:${IMAGE_TAG}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Trivy Scan') {
+            parallel {
+                stage('Scan Frontend') {
+                    steps {
+                        sh 'docker run --rm aquasec/trivy image chywiz/frontend:${IMAGE_TAG}'
+                    }
+                }
+
+                stage('Scan Auth Service') {
+                    steps {
+                        sh 'docker run --rm aquasec/trivy image chywiz/auth-service:${IMAGE_TAG}'
+                    }
+                }
+
+                stage('Scan Budget Service') {
+                    steps {
+                        sh 'docker run --rm aquasec/trivy image chywiz/budget-service:${IMAGE_TAG}'
+                    }
+                }
+
+                stage('Scan Transaction Service') {
+                    steps {
+                        sh 'docker run --rm aquasec/trivy image chywiz/transaction-service:${IMAGE_TAG}'
+                    }
+                }
+            }
+        }
+    }
+}
 
