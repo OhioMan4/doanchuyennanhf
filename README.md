@@ -27,7 +27,7 @@ Hệ thống được xây dựng theo kiến trúc **microservices**, giúp d�
 
 ### 🔹 Backend (Microservices)
 - `auth-service`: Xử lý xác thực và quản lý người dùng (JWT, đăng ký, đăng nhập)
-- `budget-service`: Quản lý ngân sách hàng tháng, phân loại chi tiêu
+- `budget-service`: Quản lý ngân sách hàng tháng, phân loại chi  tiêu
 - `transactions-service`: Ghi nhận các giao dịch thu/chi
 
 ### 🔹 Triển khai
