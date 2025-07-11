@@ -33,7 +33,7 @@ Hệ thống được xây dựng theo kiến trúc **microservices**, giúp d�
 ### 🔹 Triển khai
 - Mỗi service được container hóa bằng Docker
 - Deploy tự động thông qua **GitHub Actions** và * *ArgoCD**
-- Chạy trên cụm **K3s** (local hoặc on-premise)
+- Chạy trên cụm **K3s** (local hoặc on-premise) 
 
 ---
 
