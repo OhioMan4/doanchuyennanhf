@@ -125,13 +125,22 @@ pipeline {
 stage('K6 Performance Test (Local)') {
     steps {
         sh '''
-            echo "Running K6 performance tests..."
+            echo "Running K6 performance Auth tests..."
             k6 run ./k6-test/auth.test.js || echo "K6 test failed"
         '''
     }
+    steps {
+        sh '''
+            echo "Running K6 performance Budget tests..."
+            k6 run ./k6-test/budget.test.js || echo "K6 test failed"
+        '''
+    }
+    steps {
+        sh '''
+            echo "Running K6 performance Transaction tests..."
+            k6 run ./k6-test/transaction.test.js || echo "K6 test failed"
+        '''
+    }
 }
-
-
-
     }
 }
