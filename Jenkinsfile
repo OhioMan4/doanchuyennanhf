@@ -132,7 +132,7 @@ stage('K6 Performance Tests') {
             k6 run ./k6-test/budget.test.js || echo "Budget test failed"
 
             echo "Running K6 performance Transaction tests..."
-            k6 run ./k6-test/transaction.test.js || echo "Transaction test failed"
+            k6 run ./k6-test/transaction.test.js || echo "Transaction test  failed"
         '''
     }
 }
