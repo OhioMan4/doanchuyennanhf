@@ -8,12 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Source') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Secret Scan - Gitleaks') {
             steps {
                 sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks detect --source=/path --verbose'
@@ -68,32 +62,66 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            parallel {
-                stage('Scan Frontend') {
-                    steps {
-                        sh 'docker run --rm aquasec/trivy image chywiz/frontend:${IMAGE_TAG}'
-                    }
-                }
-
-                stage('Scan Auth Service') {
-                    steps {
-                        sh 'docker run --rm aquasec/trivy image chywiz/auth-service:${IMAGE_TAG}'
-                    }
-                }
-
-                stage('Scan Budget Service') {
-                    steps {
-                        sh 'docker run --rm aquasec/trivy image chywiz/budget-service:${IMAGE_TAG}'
-                    }
-                }
-
-                stage('Scan Transaction Service') {
-                    steps {
-                        sh 'docker run --rm aquasec/trivy image chywiz/transaction-service:${IMAGE_TAG}'
-                    }
-                }
+       stage('Trivy Scan') {
+    parallel {
+        stage('Scan Frontend') {
+            steps {
+                sh 'trivy image --skip-update chywiz/frontend:${IMAGE_TAG}'
             }
         }
+
+        stage('Scan Auth Service') {
+            steps {
+                sh 'trivy image --skip-update chywiz/auth-service:${IMAGE_TAG}'
+            }
+        }
+
+        stage('Scan Budget Service') {
+            steps {
+                sh 'trivy image --skip-update chywiz/budget-service:${IMAGE_TAG}'
+            }
+        }
+
+        stage('Scan Transaction Service') {
+            steps {
+                sh 'trivy image --skip-update chywiz/transaction-service:${IMAGE_TAG}'
+            }
+        }
+    }
+}
+
+
+     stage('Update Manifest & Push') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'github_pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
+            sh '''
+                rm -rf repo
+                mkdir repo
+                cd repo
+
+                git init
+                git config user.name "OhioMan4"
+                git config user.email "22520178@gm.uit.edu.vn"
+
+                git remote add origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/OhioMan4/doanchuyennanhf.git
+                git config core.sparseCheckout true
+
+                mkdir -p .git/info
+                echo "deploy/" > .git/info/sparse-checkout
+
+                git fetch origin main
+                git checkout main
+
+                sed -i 's|image: chywiz/frontend:.*|image: chywiz/frontend:${IMAGE_TAG}|' deploy/frontend/deployment.yaml
+
+                git add deploy/frontend/deployment.yaml
+                git commit -m "Update frontend image to ${IMAGE_TAG}" || echo "No changes to commit"
+                git push origin main || echo "Push failed (check PAT permissions)"
+            '''
+        }
+    }
+}
+
+
     }
 }
