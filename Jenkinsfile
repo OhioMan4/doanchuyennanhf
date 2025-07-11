@@ -122,25 +122,20 @@ pipeline {
     }
 }
 
-stage('K6 Performance Test (Local)') {
+stage('K6 Performance Tests') {
     steps {
         sh '''
             echo "Running K6 performance Auth tests..."
-            k6 run ./k6-test/auth.test.js || echo "K6 test failed"
-        '''
-    }
-    steps {
-        sh '''
+            k6 run ./k6-test/auth.test.js || echo "Auth test failed"
+
             echo "Running K6 performance Budget tests..."
-            k6 run ./k6-test/budget.test.js || echo "K6 test failed"
-        '''
-    }
-    steps {
-        sh '''
+            k6 run ./k6-test/budget.test.js || echo "Budget test failed"
+
             echo "Running K6 performance Transaction tests..."
-            k6 run ./k6-test/transaction.test.js || echo "K6 test failed"
+            k6 run ./k6-test/transaction.test.js || echo "Transaction test failed"
         '''
     }
 }
+
     }
 }
