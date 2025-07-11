@@ -112,7 +112,7 @@ pipeline {
                 git fetch origin main
                 git checkout main
 
-                sed -i 's|image: chywiz/frontend:.*|image: chywiz/frontend:latest |' deploy/frontend/deployment.yaml
+                sed -i 's|image: chywiz/frontend:.*|image: chywiz/frontend:latest|' deploy/frontend/deployment.yaml
 
                 git add deploy/frontend/deployment.yaml
                 git commit -m "Update frontend image to ${IMAGE_TAG}" || echo "No changes to commit"
